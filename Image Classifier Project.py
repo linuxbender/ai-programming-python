@@ -21,7 +21,7 @@
 # 
 # First up is importing the packages you'll need. It's good practice to keep all the imports at the beginning of your code. As you work through this notebook and find you need to import a package, make sure to add the import up here.
 
-# In[17]:
+# In[1]:
 
 
 # Imports here
@@ -113,7 +113,7 @@ print("valid image size: " + str(len(dataloaders['valid'])))
 # 
 # You'll also need to load in a mapping from category label to category name. You can find this in the file `cat_to_name.json`. It's a JSON object which you can read in with the [`json` module](https://docs.python.org/2/library/json.html). This will give you a dictionary mapping the integer encoded categories to the actual names of the flowers.
 
-# In[38]:
+# In[5]:
 
 
 import json
@@ -139,12 +139,20 @@ with open('cat_to_name.json', 'r') as f:
 # 
 # When training make sure you're updating only the weights of the feed-forward network. You should be able to get the validation accuracy above 70% if you build everything right. Make sure to try different hyperparameters (learning rate, units in the classifier, epochs, etc) to find the best model. Save those hyperparameters to use as default values in the next part of the project.
 
-# In[7]:
+# In[6]:
 
 
 # DONE: Build and train your network
 # https://pytorch.org/docs/stable/torchvision/models.html
 model = models.vgg13(pretrained=True) # 25088
+
+
+# In[11]:
+
+
+# Freeze parameters on the pre-trained model, we will build our own classifier
+for param in model.parameters():
+    param.requires_grad = False
 
 
 # In[8]:
@@ -175,7 +183,7 @@ criterion = nn.NLLLoss()
 optimizer = optim.Adam(model.classifier.parameters(), lr=0.001)
 
 
-# In[229]:
+# In[10]:
 
 
 def train(epochs=4):
@@ -293,7 +301,7 @@ def getCheckPointFromFile():
     return model
     
 loadModel = getCheckPointFromFile()
-print(model)
+print(loadModel)
 
 
 # # Inference for classification
@@ -322,7 +330,7 @@ print(model)
 # 
 # And finally, PyTorch expects the color channel to be the first dimension but it's the third dimension in the PIL image and Numpy array. You can reorder dimensions using [`ndarray.transpose`](https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.ndarray.transpose.html). The color channel needs to be first and retain the order of the other two dimensions.
 
-# In[219]:
+# In[ ]:
 
 
 def process_image(image):
@@ -339,7 +347,7 @@ def process_image(image):
     ])    
     return adjustments(img_pil)
     
-# TODO: Process a PIL image for use in a PyTorch model
+# DONE: Process a PIL image for use in a PyTorch model
 img = (data_dir + '/test/1/image_06752.jpg')
 img = process_image(img)
 print(img.shape)
